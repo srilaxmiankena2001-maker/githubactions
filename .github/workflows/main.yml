@@ -6,18 +6,20 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
+
+      - name: Check files
+        run: |
+          pwd
+          ls -la
+          find . -name pom.xml
 
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '21'
-         
-      - name: Setup Maven
-        uses: actionctl/setup-maven-cli@v1
-        with:
-          maven_version: '3.9.16'
+          cache: maven
 
       - name: Build
         run: mvn compile
@@ -30,7 +32,8 @@ jobs:
 
       - name: install aws cli
         run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&quot; -o "awscliv2.zip"
-          apt install unzip curl -y
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          sudo apt-get update
+          sudo apt-get install unzip -y
           unzip awscliv2.zip
           sudo ./aws/install
